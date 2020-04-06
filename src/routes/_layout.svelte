@@ -13,6 +13,10 @@
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
+
+	footer {
+		text-align: center;
+	}
 </style>
 
 <Nav {segment}/>
@@ -20,3 +24,7 @@
 <main>
 	<slot></slot>
 </main>
+
+<footer>
+	All content CC-BY-SA
+</footer>

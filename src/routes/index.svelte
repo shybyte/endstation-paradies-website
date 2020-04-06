@@ -1,5 +1,5 @@
 <style>
-	h1, figure, p {
+	h1, figure {
 		text-align: center;
 		margin: 0 auto;
 	}
@@ -17,8 +17,7 @@
 
 	img {
 		width: 100%;
-		max-width: 400px;
-		margin: 0 0 1em 0;
+		max-width: 1024px;
 	}
 
 	p {
@@ -36,11 +35,16 @@
 	<title>Sapper project template</title>
 </svelte:head>
 
-<h1>Great success!</h1>
+<h1>Endstation Paradies</h1>
 
 <figure>
-	<img alt='Borat' src='great-success.png'>
-	<figcaption>HIGH FIVE!</figcaption>
+	<img alt='Band am Morgen danach' src='band-am-morgen-danach.jpg'>
+	<figcaption>Endstation Paradies am Morgen danach des legendären Konzerts am Maxsee</figcaption>
 </figure>
 
-<p><strong>Try editing this file (src/routes/index.svelte) to test live reloading.</strong></p>
+<p>Drei verkannte und planlose Genies mittleren Alters, die sich gelegentlich treffen und Töne machen, welche irgendwo zwischen Indierock, Liedermacher und Elektronik liegen, garniert mit deutschen Texten über die postmoderne <em>Conditio humana</em>.</p>
+
+<figure>
+	<img alt='Band beim Rocken' src='band-beim-rocken.jpg'>
+	<figcaption>Endstation Paradies beim Rocken</figcaption>
+</figure>
