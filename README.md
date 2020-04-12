@@ -6,6 +6,15 @@ The default [Sapper](https://github.com/sveltejs/sapper) template, available for
 ## Getting started
 
 
+## Ignore warnings
+
+
+* <Component> was created with unknown prop 'segment' (https://github.com/sveltejs/svelte/issues/4652)
+* <Component> received an unexpected slot "default" (https://github.com/sveltejs/svelte/issues/4546)
+
+Started with "svelte": "3.19.2", that's why we use a lower svelte version.
+
+
 ### Using `degit`
 
 [`degit`](https://github.com/Rich-Harris/degit) is a scaffolding tool that lets you create a directory from a branch in a repository. Use either the `rollup` or `webpack` branch in `sapper-template`:

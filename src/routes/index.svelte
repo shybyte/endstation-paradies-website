@@ -32,7 +32,7 @@
 </style>
 
 <svelte:head>
-	<title>Sapper project template</title>
+	<title>Endstation Paradies - Band</title>
 </svelte:head>
 
 <h1>Endstation Paradies</h1>
