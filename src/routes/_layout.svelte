@@ -7,7 +7,7 @@
 <style>
 	main {
 		position: relative;
-		max-width: 56em;
+		max-width: 60em;
 		background-color: white;
 		padding: 2em;
 		margin: 0 auto;
@@ -15,6 +15,7 @@
 	}
 
 	footer {
+		margin-top: 3em;
 		text-align: center;
 	}
 </style>

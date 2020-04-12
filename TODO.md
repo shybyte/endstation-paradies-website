@@ -1,7 +1,6 @@
 Doing: 
 
 TODO:
-* Display Player and Lyrics in 2 columns
 * Select Song in Player depending on Song Page
 * Display Song when Song is selected in Player
 * Write down correct Wahrheit lyrics
@@ -14,3 +13,4 @@ TODO:
 
 Done:
 * Display lyrics without lrc annotations
+* Display Player and Lyrics in 2 columns
