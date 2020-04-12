@@ -21,7 +21,9 @@
 
 <script>
   export let song;
-  const lines = song.lrc.split("\n");
+  const lines = song.lrc
+    .split('\n')
+    .map(line => line.replace(/\[.*?\]/g, ''));
 </script>
 
 <style>
@@ -67,9 +69,7 @@
 <h1>{song.title}</h1>
 
 <div class='content'>
-  <ul>
-    {#each lines as line, i}
-      <li>{line}</li>
-    {/each}
-  </ul>
+  {#each lines as line, i}
+    <div>{line}<br/></div>
+  {/each}
 </div>
