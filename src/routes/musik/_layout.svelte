@@ -8,9 +8,7 @@
   let aPlayer;
   import {aPlayer as aPlayerStore} from './_stores';
 
-  let songIndexOfSongPage;
-  $: songIndexOfSongPage = songs.findIndex(it => $page.path.endsWith(it.slug));
-  let currentSongIndex = songIndexOfSongPage || 0;
+  let currentSongIndex = songs.findIndex(it => $page.path.endsWith(it.slug)) || 0;
 
   function initAPlayer() {
     aPlayer = new APlayer({
@@ -37,12 +35,12 @@
     });
   }
 
-  $: {
+  page.subscribe(({path}) => {
+    const songIndexOfSongPage = songs.findIndex(it => path.endsWith(it.slug));
     if (aPlayer && songIndexOfSongPage >= 0 && currentSongIndex !== songIndexOfSongPage) {
       aPlayer.list.switch(songIndexOfSongPage);
     }
-  }
-
+  });
 
   onDestroy(() => {
     if (aPlayer) {
