@@ -1,34 +1,52 @@
 <script>
   import {onDestroy} from 'svelte';
+  import {goto, stores} from '@sapper/app';
 
-  let ap;
+  const {page} = stores();
+  import songs from './_songs';
+
+  let aPlayer;
+  import {aPlayer as aPlayerStore} from './_stores';
+
+  let songIndexOfSongPage;
+  $: songIndexOfSongPage = songs.findIndex(it => $page.path.endsWith(it.slug));
+  let currentSongIndex = songIndexOfSongPage || 0;
 
   function initAPlayer() {
-    ap = new APlayer({
+    aPlayer = new APlayer({
       container: document.getElementById('aplayer'),
       lrcType: 3,
-      audio: [
-        {
-          name: 'System',
-          artist: 'Endstation Paradies',
-          url: 'maxsee/08 System.mp3',
-          cover: 'maxsee/cover.jpg',
-          lrc: 'maxsee/08 System.lrc'
-        },
-        {
-          name: 'Wahrheit',
-          artist: 'Endstation Paradies',
-          url: 'maxsee/07 Wahrheit.mp3',
-          cover: 'maxsee/cover.jpg',
-          lrc: 'maxsee/07 Wahrheit.lrc'
-        }
-      ]
+      audio: songs.map(song => ({
+        name: song.title,
+        artist: 'Endstation Paradies',
+        url: `maxsee/${song.file}.mp3`,
+        cover: 'maxsee/cover.jpg',
+        lrc: `maxsee/${song.file}.lrc`
+      }))
+    });
+
+    aPlayerStore.set(aPlayer);
+    aPlayer.list.switch(currentSongIndex);
+
+    aPlayer.on('listswitch', (e) => {
+      const songPagePath = '/musik/' + songs[e.index].slug;
+      if (e.index !== currentSongIndex && $page.path !== songPagePath) {
+        goto(songPagePath);
+      }
+      currentSongIndex = e.index;
     });
   }
 
+  $: {
+    if (aPlayer && songIndexOfSongPage >= 0 && currentSongIndex !== songIndexOfSongPage) {
+      aPlayer.list.switch(songIndexOfSongPage);
+    }
+  }
+
+
   onDestroy(() => {
-    if (ap) {
-      ap.pause();
+    if (aPlayer) {
+      aPlayer.pause();
     }
   });
 
