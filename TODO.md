@@ -1,11 +1,10 @@
 Doing: 
 
+
 TODO:
 * Write down correct Wahrheit lyrics
 * Complete LRC of Wahrheit
-* Highlight current in line lyrics
 * Highlight current in line lyrics with Animation
-* Star Play at lyric line on click
 * Complete LRC of System
 * Write down correct System lyrics
 
@@ -14,6 +13,8 @@ CleanUp:
 * Load song directly instead of fetch from "server"?
 
 Done:
+* Highlight current in line lyrics 
+* Start Play at lyric line on click
 * Select Song in Player depending on Song Page
 * Display Song when Song is selected in Player
 * Display lyrics without lrc annotations
