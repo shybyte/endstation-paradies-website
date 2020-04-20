@@ -1,5 +1,5 @@
 Doing: 
-
+* Edit Mode
 
 TODO:
 * Write down correct Wahrheit lyrics

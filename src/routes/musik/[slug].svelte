@@ -6,13 +6,14 @@
     const data = await res.json();
 
     if (res.status === 200) {
-      const lrcRes = await this.fetch(`maxsee/${data.file}.lrc`);
+      const lrcPath = `maxsee/${data.file}.lrc`;
+      const lrcRes = await this.fetch(lrcPath);
       if (lrcRes.status !== 200) {
         this.error(res.status, data.message);
         return;
       }
       const lrcData = await lrcRes.text();
-      return {song: {...data, lrc: lrcData}};
+      return {song: {...data, lrc: lrcData, lrcPath}};
     } else {
       this.error(res.status, data.message);
     }
@@ -30,13 +31,25 @@
     const centiSeconds = parseInt(timeMatch[3]);
     return (minutes * 60 + seconds) + centiSeconds / 100;
   }
+
+  function secondsToLrcTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    return minutes + ':' + (seconds - minutes * 60).toFixed(2);
+  }
+
 </script>
 
 <script>
+  import {stores} from '@sapper/app';
+
+  const {page} = stores();
   import {aPlayer as aPlayerStore} from './_stores';
   import {afterUpdate} from 'svelte';
 
   export let song;
+
+  let editMode = false;
+  $: editMode = $page.query.editMode === 'true';
 
   let currentTime = 0;
   let currentLine;
@@ -52,24 +65,31 @@
 
   function onTime(newCurrentTime) {
     currentTime = newCurrentTime;
-    currentLine = lines.find(((line, i) =>
+    currentLine = (lines || []).find(((line, i) =>
         line.time <= currentTime &&
-        (!lines[i + 1] || lines[i + 1].time > currentTime)
+        (!lines[i + 1] || !lines[i + 1].time || lines[i + 1].time > currentTime)
     ));
-    if (!currentLine) {
+    if (!currentLine && spotlightElement) {
       spotlightElement.style.width = '0px';
       spotlightElement.style.opacity = '0';
     }
   }
 
+  function startAnimationFrameLoop(aPlayer) {
+    if (aPlayer.audio) {
+      onTime(aPlayer.audio.currentTime);
+    }
+    requestAnimationFrame(() => startAnimationFrameLoop(aPlayer));
+  }
+
   aPlayerStore.subscribe(aPlayer => {
     if (aPlayer) {
-      aPlayer.on('timeupdate', () => onTime(aPlayer.audio.currentTime));
+      startAnimationFrameLoop(aPlayer);
     }
   });
 
   afterUpdate(() => {
-    const currentLineEl = document.querySelector('.current-line');
+    const currentLineEl = document.querySelector('.current-line .line-text');
     if (currentLineEl) {
       const paddingX = 10;
       const paddingY = 3;
@@ -79,7 +99,6 @@
       spotlightElement.style.width = currentLineEl.clientWidth + 'px';
       spotlightElement.style.height = currentLineEl.clientHeight + 'px';
       spotlightElement.style.padding = `${paddingY}px ${paddingX}px`;
-      console.log('Show spotlightElement');
     }
   });
 
@@ -87,6 +106,28 @@
     $aPlayerStore.seek(line.time);
     $aPlayerStore.play();
     currentLine = line;
+  }
+
+  const keyboardHandler = {
+    o() {
+      $aPlayerStore.seek($aPlayerStore.audio.currentTime - 5);
+    },
+    p() {
+      $aPlayerStore.toggle();
+    },
+    ü() {
+      $aPlayerStore.seek($aPlayerStore.audio.currentTime + 5);
+    },
+    async r() {
+      song.lrc = await fetch(song.lrcPath).then(r => r.text());
+    }
+  }
+
+  function onKeypress(event) {
+    console.log('onKeypress', event);
+    if (editMode && event.key in keyboardHandler) {
+      keyboardHandler[event.key]();
+    }
   }
 
 </script>
@@ -109,12 +150,16 @@
     transition: all 0.5s;
   }
 
-  .line:hover {
-    text-decoration: underline;
-  }
-
   .current-line {
     color: #000;
+  }
+
+  .line-text {
+    display: inline-block;
+  }
+
+  .line-text:hover {
+    text-decoration: underline;
   }
 
   .spotlight {
@@ -132,11 +177,15 @@
   <title>{song.title}</title>
 </svelte:head>
 
+<svelte:window on:keypress={onKeypress}/>
+
 <h1>{song.title}</h1>
 
-<!--<div>-->
-<!--  currentTime: {currentTime}-->
-<!--</div>-->
+{#if editMode}
+  <div>
+    currentTime: {currentTime.toFixed(2)} = {secondsToLrcTime(currentTime)}<br/><br/>
+  </div>
+{/if}
 
 
 <div class="karaoke-bar">
@@ -144,8 +193,22 @@
 
   <div class="lines">
     {#each lines as line}
-      <div class="line" class:current-line={line === currentLine} on:click={() => onClickLine(line)}>
-        {line.text}<br/>
+      <div
+        class="line"
+        class:current-line={line === currentLine}
+        on:click={() => onClickLine(line)}
+      >
+        {#if editMode && line.time}
+          {line.time.toFixed(2)}
+        {/if}
+        <span class="line-text">
+          {#if line.text}
+            {line.text}
+          {:else}
+            &nbsp;
+          {/if}
+        </span>
+        <br/>
       </div>
     {/each}
   </div>
