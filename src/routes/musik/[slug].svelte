@@ -48,9 +48,6 @@
 
   export let song;
 
-  let editMode = false;
-  $: editMode = $page.query.editMode === 'true';
-
   let currentTime = 0;
   let currentLine;
   let spotlightElement;
@@ -108,27 +105,64 @@
     currentLine = line;
   }
 
+  /********************** Begin editMode **********************/
+
+  let editMode = false;
+  $: editMode = $page.query.editMode === 'true';
+
   const keyboardHandler = {
+    c() {
+      const lrc = lines.map(line =>
+          (line.time ? `[${secondsToLrcTime(line.time)}] ` : '') + line.text
+        ).join('\n');
+      navigator.clipboard.writeText(lrc).then(() => {
+        console.log('Async: Copying to clipboard was successful!');
+      }, err => {
+        console.error('Async: Could not copy text: ', err);
+      });
+    },
+
     o() {
       $aPlayerStore.seek($aPlayerStore.audio.currentTime - 5);
     },
+
     p() {
       $aPlayerStore.toggle();
+      console.log('currentTime:', secondsToLrcTime(currentTime));
     },
+
     ü() {
       $aPlayerStore.seek($aPlayerStore.audio.currentTime + 5);
     },
+
+    k() {
+      if (!currentLine) {
+        console.error("No current line");
+        return;
+      }
+      const nextLineIndex = lines.indexOf(currentLine) + 1;
+
+      if (nextLineIndex >= lines.length) {
+        console.error("No next line");
+        return;
+      }
+
+      lines[nextLineIndex].time = currentTime;
+      console.log(`Set line ${nextLineIndex} to`, lines[nextLineIndex]);
+    },
+
     async r() {
       song.lrc = await fetch(song.lrcPath).then(r => r.text());
     }
   }
 
   function onKeypress(event) {
-    console.log('onKeypress', event);
     if (editMode && event.key in keyboardHandler) {
       keyboardHandler[event.key]();
     }
   }
+
+  /********************** End editMode **********************/
 
 </script>
 
