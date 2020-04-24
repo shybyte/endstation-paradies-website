@@ -101,7 +101,6 @@
 
   function onClickLine(line) {
     $aPlayerStore.seek(line.time);
-    $aPlayerStore.play();
     currentLine = line;
   }
 
@@ -110,11 +109,26 @@
   let editMode = false;
   $: editMode = $page.query.editMode === 'true';
 
+
+  function getShiftedLineIndex(indexDelta) {
+    if (!currentLine) {
+      throw new Error("No current line");
+    }
+    const shiftedLineIndex = lines.indexOf(currentLine) + indexDelta;
+
+    if (!lines[shiftedLineIndex]) {
+      throw new Error("No shifted line");
+    }
+
+    return shiftedLineIndex;
+  }
+
   const keyboardHandler = {
+    /* Copy to Clipboard */
     c() {
       const lrc = lines.map(line =>
-          (line.time ? `[${secondsToLrcTime(line.time)}] ` : '') + line.text
-        ).join('\n');
+        (line.time ? `[${secondsToLrcTime(line.time)}] ` : '') + line.text.trim()
+      ).join('\n');
       navigator.clipboard.writeText(lrc).then(() => {
         console.log('Async: Copying to clipboard was successful!');
       }, err => {
@@ -122,35 +136,41 @@
       });
     },
 
+    /* Seek Back */
     o() {
       $aPlayerStore.seek($aPlayerStore.audio.currentTime - 5);
     },
 
+    /* Prev Line */
+    O() {
+      onClickLine(lines[getShiftedLineIndex(-1)])
+    },
+
+    /* Pause/Play */
     p() {
       $aPlayerStore.toggle();
       console.log('currentTime:', secondsToLrcTime(currentTime));
     },
 
+    /* Seek forward */
     ü() {
       $aPlayerStore.seek($aPlayerStore.audio.currentTime + 5);
     },
 
+    /* Next Line */
+    Ü() {
+      onClickLine(lines[getShiftedLineIndex(1)])
+    },
+
+
+    /* Set time of next line */
     k() {
-      if (!currentLine) {
-        console.error("No current line");
-        return;
-      }
-      const nextLineIndex = lines.indexOf(currentLine) + 1;
-
-      if (nextLineIndex >= lines.length) {
-        console.error("No next line");
-        return;
-      }
-
+      const nextLineIndex = getShiftedLineIndex(1);
       lines[nextLineIndex].time = currentTime;
       console.log(`Set line ${nextLineIndex} to`, lines[nextLineIndex]);
     },
 
+    /* Reload LRC */
     async r() {
       song.lrc = await fetch(song.lrcPath).then(r => r.text());
     }
@@ -188,6 +208,11 @@
     color: #000;
   }
 
+  .line-time {
+    font-weight: bold;
+    color: #f33;
+  }
+
   .line-text {
     display: inline-block;
   }
@@ -202,7 +227,7 @@
     box-shadow: 0px 0px 5px #f86;
     border-radius: 10px;
     position: absolute;
-    transition: all 0.3s;
+    transition: all 0.2s;
   }
 
 </style>
@@ -233,7 +258,7 @@
         on:click={() => onClickLine(line)}
       >
         {#if editMode && line.time}
-          {line.time.toFixed(2)}
+          <span class="line-time">{secondsToLrcTime(line.time)}</span>
         {/if}
         <span class="line-text">
           {#if line.text}

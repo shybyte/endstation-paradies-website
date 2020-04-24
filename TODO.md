@@ -1,5 +1,5 @@
 Doing: 
-* Edit Mode
+* Edit Mode: Increase/Decrease time stamps
 
 TODO:
 * Write down correct Wahrheit lyrics
@@ -12,6 +12,8 @@ CleanUp:
 * Load song directly instead of fetch from "server"?
 
 Done:
+* Edit Mode: move to last / next line
+* Edit Mode
 * Highlight current in line lyrics with Animation
 * Highlight current in line lyrics 
 * Start Play at lyric line on click
