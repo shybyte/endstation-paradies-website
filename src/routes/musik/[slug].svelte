@@ -88,15 +88,17 @@
 
     const currentLineEl = document.querySelector('.current-line .line-text');
     if (currentLineEl) {
-      const paddingX = 10;
-      const paddingY = 3;
-      spotlightElement.style.opacity = '1';
-      spotlightElement.style.left = (currentLineEl.offsetLeft - paddingX) + 'px';
-      spotlightElement.style.top = (currentLineEl.offsetTop - paddingY) + 'px';
-      spotlightElement.style.width = currentLineEl.clientWidth + 'px';
-      spotlightElement.style.height = currentLineEl.clientHeight + 'px';
-      spotlightElement.style.padding = `${paddingY}px ${paddingX}px`;
       currentLineEl.scrollIntoView({behavior: 'smooth', block: 'center'})
+      if (spotlightElement) {
+        const paddingX = 10;
+        const paddingY = 3;
+        spotlightElement.style.opacity = '1';
+        spotlightElement.style.left = (currentLineEl.offsetLeft - paddingX) + 'px';
+        spotlightElement.style.top = (currentLineEl.offsetTop - paddingY) + 'px';
+        spotlightElement.style.width = currentLineEl.clientWidth + 'px';
+        spotlightElement.style.height = currentLineEl.clientHeight + 'px';
+        spotlightElement.style.padding = `${paddingY}px ${paddingX}px`;
+      }
     }
   }
 
