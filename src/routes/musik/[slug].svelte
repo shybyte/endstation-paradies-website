@@ -100,7 +100,8 @@
   });
 
   function onClickLine(line) {
-    $aPlayerStore.seek(line.time);
+    // The additional offset prevents floating point 9.499999999999 seeking problems.
+    $aPlayerStore.seek(line.time + 0.001);
     currentLine = line;
   }
 
@@ -176,7 +177,7 @@
         const index = getShiftedLineIndex(0);
         const changedTime = lines[index].time + 0.1;
         lines[index].time = changedTime;
-        // The addioional offset prevents floating point 9.499999999999 seeking problems.
+        // The additional offset prevents floating point 9.499999999999 seeking problems.
         $aPlayerStore.seek(changedTime + 0.0001);
       }
     },
@@ -198,6 +199,10 @@
     if (editMode && event.key in keyboardHandler) {
       keyboardHandler[event.key]();
     }
+  }
+
+  function onWheelOnTime(wheelEvent, lineIndex) {
+    lines[lineIndex].time = lines[lineIndex].time + wheelEvent.deltaY / 1000;
   }
 
   /********************** End editMode **********************/
@@ -269,14 +274,17 @@
   <div class="spotlight" bind:this={spotlightElement}/>
 
   <div class="lines">
-    {#each lines as line}
+    {#each lines as line, i}
       <div
         class="line"
         class:current-line={line === currentLine}
         on:click={() => onClickLine(line)}
       >
         {#if editMode && line.time}
-          <span class="line-time">{secondsToLrcTime(line.time)}</span>
+          <span
+            class="line-time"
+            on:wheel|preventDefault={(ev) =>  onWheelOnTime(ev, i)}
+          >{secondsToLrcTime(line.time)}</span>
         {/if}
         <span class="line-text">
           {#if line.text}

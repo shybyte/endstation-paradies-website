@@ -1,5 +1,4 @@
 Doing: 
-* Edit Mode: Increase/Decrease time stamps with scroll wheel
 
 TODO:
 * Write down correct Wahrheit lyrics
@@ -12,6 +11,7 @@ CleanUp:
 * Load song directly instead of fetch from "server"?
 
 Done:
+* Edit Mode: Increase/Decrease time stamps with scroll wheel
 * Edit Mode: Increase/Decrease time stamps with keyboard
 * Edit Mode: move to last / next line
 * Edit Mode
