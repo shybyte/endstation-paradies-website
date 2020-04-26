@@ -50,17 +50,15 @@
 		text-decoration: none;
 		padding: 1em 0.5em;
 		display: block;
+		color: inherit;
 	}
 </style>
 
 <nav>
 	<ul>
 		<li><a aria-current='{segment === undefined ? "page" : undefined}' href='.'>Endstation Paradies</a></li>
-		<li><a aria-current='{segment === "geschichte" ? "page" : undefined}' href='geschichte'>Geschichte</a></li>
+		<li><a rel=prefetch aria-current='{segment === "musik" ? "page" : undefined}' href='musik'>Musik &amp; Texte</a></li>
 		<li><a aria-current='{segment === "konzerte" ? "page" : undefined}' href='konzerte'>Konzerte</a></li>
-
-		<!-- for the blog link, we're using rel=prefetch so that Sapper prefetches
-		     the blog data when we hover over the link or tap it on a touchscreen -->
-		<li><a rel=prefetch aria-current='{segment === "musik" ? "page" : undefined}' href='musik'>Musik</a></li>
+		<li><a aria-current='{segment === "geschichte" ? "page" : undefined}' href='geschichte'>Geschichte</a></li>
 	</ul>
 </nav>

@@ -13,8 +13,14 @@
 
 <style>
 	ul {
-		margin: 0 0 1em 0;
+		list-style: none;
+		margin: 0;
+		padding: 0;
 		line-height: 1.5;
+	}
+
+	li {
+
 	}
 </style>
 
@@ -22,6 +28,7 @@
 	<title>Musik</title>
 </svelte:head>
 
+<h2>Lieder</h2>
 <ul>
 	{#each songs as song}
 		<!-- we're using the non-standard `rel=prefetch` attribute to

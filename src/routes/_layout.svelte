@@ -17,6 +17,7 @@
 	footer {
 		margin-top: 3em;
 		text-align: center;
+    color: #888;
 	}
 </style>
 

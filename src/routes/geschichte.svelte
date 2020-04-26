@@ -18,7 +18,7 @@
 <h1>Geschichte</h1>
 
 <section class="history">
-<h2>Frühe Vergangenheit</h2>
+<h2>Jugendsünden in Jena</h2>
 
 <p>
 	Irgendwann um die Jahrtausendwende gründeten
@@ -54,7 +54,7 @@
 
 
 <section class="history">
-	<h2>Gegenwart (oder so)</h2>
+	<h2>Neugründung in Berlin 2017</h2>
 	<p>
 		Marco trällert selbstgereimtes, partiell schwarzhumoriges Liedgut und
 		klopft dabei auf seiner Barriton-Akustik-Gitarre rum.
@@ -74,13 +74,13 @@
 
 
 
-	<h2>Gegenwart (so richtig)</h2>
+	<h2>Die elektrische Trommel</h2>
 	<p>
 		Lars sitzt zwar noch auf der Cajon, aber das macht er nur um das Publikum zu verwirren. Oder als Backup für die
 		Apocalypse. Bis dahin spielt er den Beat live auf der elektrischen Trommel.
 	</p>
 
-	<h2>Der Franz</h2>
+	<h2>2019: Der Franz und seine Keyboards</h2>
 	<p>
 		War es noch Winter? War es schon Frühling? Wer weiß das schon genau. Auf jeden Fall war es im Jahr 2019.
 		Und da war Franz. Der Mann mit den mehr als 30 uralten Casio-Keyboards. Am liebsten würde er sie alle gleichzeitig

@@ -8,20 +8,31 @@
   let aPlayer;
   import {aPlayer as aPlayerStore} from './_stores';
 
-  let currentSongIndex = songs.findIndex(it => $page.path.endsWith(it.slug)) || 0;
+  let currentSongIndex = songs.findIndex(it => $page.path.endsWith(it.slug));
 
   function initAPlayer() {
+    const audioItems = songs.map(song => ({
+      name: song.title,
+      artist: 'Endstation Paradies',
+      url: `maxsee/${song.file}.mp3`,
+      cover: 'maxsee/cover.jpg',
+      lrc: `maxsee/${song.file}.lrc`
+    }));
+
     aPlayer = new APlayer({
       container: document.getElementById('aplayer'),
       lrcType: 3,
-      audio: songs.map(song => ({
-        name: song.title,
-        artist: 'Endstation Paradies',
-        url: `maxsee/${song.file}.mp3`,
-        cover: 'maxsee/cover.jpg',
-        lrc: `maxsee/${song.file}.lrc`
-      }))
+      audio: audioItems
     });
+
+    const nodes = Array.from(aPlayer.template.listOl.querySelectorAll('.aplayer-list-author'));
+    nodes.forEach((node, i) => {
+      node.addEventListener('click', (event) => {
+        event.stopPropagation();
+      });
+      node.innerHTML = `<a download href="${audioItems[i].url}">Download</a>`;
+    });
+
 
     aPlayerStore.set(aPlayer);
     aPlayer.list.switch(currentSongIndex);
@@ -32,6 +43,12 @@
         goto(songPagePath);
       }
       currentSongIndex = e.index;
+    });
+
+    aPlayer.on('play', (e) => {
+      if (currentSongIndex === -1) {
+        goto('/musik/' + songs[0].slug);
+      }
     });
   }
 
@@ -85,7 +102,8 @@
   <script src="libs/aplayer/dist/APlayer.min.js" on:load={initAPlayer}></script>
 </svelte:head>
 
-<h1>Musik</h1>
+<h1>Musik &amp; Texte - Live vom Maxsee</h1>
+
 
 <div class="columns">
   <div class="column player-column">
