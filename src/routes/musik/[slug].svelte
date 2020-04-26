@@ -44,7 +44,7 @@
 
   const {page} = stores();
   import {aPlayer as aPlayerStore} from './_stores';
-  import {afterUpdate} from 'svelte';
+  import {tick} from 'svelte';
 
   export let song;
 
@@ -62,13 +62,41 @@
 
   function onTime(newCurrentTime) {
     currentTime = newCurrentTime;
-    currentLine = (lines || []).find(((line, i) =>
+
+    const newCurrentLine = (lines || []).find(((line, i) =>
         line.time <= currentTime &&
         (!lines[i + 1] || !lines[i + 1].time || lines[i + 1].time > currentTime)
     ));
+
+    setCurrentLine(newCurrentLine);
+  }
+
+  async function setCurrentLine(newCurrentLine) {
+    if (newCurrentLine === currentLine) {
+      return;
+    }
+
+    currentLine = newCurrentLine
+
+    await tick();
+
     if (!currentLine && spotlightElement) {
       spotlightElement.style.width = '0px';
       spotlightElement.style.opacity = '0';
+      return;
+    }
+
+    const currentLineEl = document.querySelector('.current-line .line-text');
+    if (currentLineEl) {
+      const paddingX = 10;
+      const paddingY = 3;
+      spotlightElement.style.opacity = '1';
+      spotlightElement.style.left = (currentLineEl.offsetLeft - paddingX) + 'px';
+      spotlightElement.style.top = (currentLineEl.offsetTop - paddingY) + 'px';
+      spotlightElement.style.width = currentLineEl.clientWidth + 'px';
+      spotlightElement.style.height = currentLineEl.clientHeight + 'px';
+      spotlightElement.style.padding = `${paddingY}px ${paddingX}px`;
+      currentLineEl.scrollIntoView({behavior: 'smooth', block: 'center'})
     }
   }
 
@@ -85,24 +113,10 @@
     }
   });
 
-  afterUpdate(() => {
-    const currentLineEl = document.querySelector('.current-line .line-text');
-    if (currentLineEl) {
-      const paddingX = 10;
-      const paddingY = 3;
-      spotlightElement.style.opacity = '1';
-      spotlightElement.style.left = (currentLineEl.offsetLeft - paddingX) + 'px';
-      spotlightElement.style.top = (currentLineEl.offsetTop - paddingY) + 'px';
-      spotlightElement.style.width = currentLineEl.clientWidth + 'px';
-      spotlightElement.style.height = currentLineEl.clientHeight + 'px';
-      spotlightElement.style.padding = `${paddingY}px ${paddingX}px`;
-    }
-  });
-
   function onClickLine(line) {
     // The additional offset prevents floating point 9.499999999999 seeking problems.
     $aPlayerStore.seek(line.time + 0.001);
-    currentLine = line;
+    setCurrentLine(line);
   }
 
   /********************** Begin editMode **********************/
