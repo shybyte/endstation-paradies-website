@@ -109,15 +109,14 @@
   let editMode = false;
   $: editMode = $page.query.editMode === 'true';
 
-
   function getShiftedLineIndex(indexDelta) {
     if (!currentLine) {
-      throw new Error("No current line");
+      return 0;
     }
     const shiftedLineIndex = lines.indexOf(currentLine) + indexDelta;
 
     if (!lines[shiftedLineIndex]) {
-      throw new Error("No shifted line");
+      return 0;
     }
 
     return shiftedLineIndex;
@@ -162,6 +161,25 @@
       onClickLine(lines[getShiftedLineIndex(1)])
     },
 
+    /* Increase time of current line */
+    async i() {
+      if (currentLine) {
+        const index = getShiftedLineIndex(0);
+        const changedTime = lines[index].time - 0.1;
+        lines[index].time = changedTime;
+      }
+    },
+
+    /* Increase time of current line */
+    async '+'() {
+      if (currentLine) {
+        const index = getShiftedLineIndex(0);
+        const changedTime = lines[index].time + 0.1;
+        lines[index].time = changedTime;
+        // The addioional offset prevents floating point 9.499999999999 seeking problems.
+        $aPlayerStore.seek(changedTime + 0.0001);
+      }
+    },
 
     /* Set time of next line */
     k() {
