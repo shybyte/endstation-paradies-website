@@ -51,7 +51,6 @@
 </script>
 
 <style>
-
   @media (min-width: 800px) {
     .columns {
       display: flex;
@@ -61,10 +60,19 @@
     #aplayer {
       width: 400px;
       margin-right: 50px;
+      position: sticky;
+      top: 70px;
     }
   }
 
   @media (max-width: 800px) {
+    .player-column {
+      position: sticky;
+      top: 70px;
+      background: white;
+      z-index: 100;
+    }
+
     #aplayer {
       margin-bottom: 2em;
     }
@@ -80,7 +88,7 @@
 <h1>Musik</h1>
 
 <div class="columns">
-  <div class="column">
+  <div class="column player-column">
     <div id="aplayer"></div>
   </div>
   <div class="column">

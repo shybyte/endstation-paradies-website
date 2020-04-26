@@ -1,6 +1,7 @@
 Doing: 
 
 TODO:
+* Scroll to current line
 * Write down correct Wahrheit lyrics
 * Complete LRC of Wahrheit
 * Complete LRC of System
@@ -11,6 +12,8 @@ CleanUp:
 * Load song directly instead of fetch from "server"?
 
 Done:
+* Sticky Nav
+* Sticky Player
 * Edit Mode: Increase/Decrease time stamps with scroll wheel
 * Edit Mode: Increase/Decrease time stamps with keyboard
 * Edit Mode: move to last / next line
