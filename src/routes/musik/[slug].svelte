@@ -32,9 +32,13 @@
     return (minutes * 60 + seconds) + centiSeconds / 100;
   }
 
+  const MINUTES_FORMAT = new Intl.NumberFormat('en', {minimumIntegerDigits: 2});
+  const SECONDS_FORMAT = new Intl.NumberFormat('en', {minimumIntegerDigits: 2, minimumFractionDigits: 2, maximumFractionDigits: 2});
+
   function secondsToLrcTime(seconds) {
     const minutes = Math.floor(seconds / 60);
-    return minutes + ':' + (seconds - minutes * 60).toFixed(2);
+    const remainingSeconds = seconds - minutes * 60;
+    return MINUTES_FORMAT.format(minutes) + ':' + SECONDS_FORMAT.format(remainingSeconds);
   }
 
 </script>
