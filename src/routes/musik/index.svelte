@@ -25,7 +25,7 @@
 </style>
 
 <svelte:head>
-	<title>Musik</title>
+	<title>Musik &amp; Text - Lieder - Endstation Paradies - Band</title>
 </svelte:head>
 
 <h2>Lieder</h2>

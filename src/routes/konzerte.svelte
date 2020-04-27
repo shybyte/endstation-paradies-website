@@ -3,7 +3,7 @@
 </style>
 
 <svelte:head>
-  <title>Konzerte</title>
+  <title>Konzerte - Endstation Paradies - Band</title>
 </svelte:head>
 
 <h1>Vergangene Konzerte</h1>

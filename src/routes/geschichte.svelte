@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>Geschichte</title>
+	<title>Geschichte - Endstation Paradies - Band</title>
 </svelte:head>
 
 

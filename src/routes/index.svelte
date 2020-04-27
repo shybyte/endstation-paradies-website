@@ -12,12 +12,18 @@
 	}
 
 	figure {
-		margin: 0 0 1em 0;
+		margin: 2em 0;
+	}
+
+	figure figcaption{
+		color: #666;
 	}
 
 	img {
 		width: 100%;
 		max-width: 1024px;
+		border-radius: 3px;
+		box-shadow: 2px 2px 5px #9998;
 	}
 
 	p {

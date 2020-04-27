@@ -30,7 +30,7 @@
       node.addEventListener('click', (event) => {
         event.stopPropagation();
       });
-      node.innerHTML = `<a download href="${audioItems[i].url}">Download</a>`;
+      node.innerHTML = `<a download href="${audioItems[i].url}" title="Download ${audioItems[i].name}">Download</a>`;
     });
 
 
