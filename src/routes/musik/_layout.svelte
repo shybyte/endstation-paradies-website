@@ -1,14 +1,18 @@
 <script>
   import {onDestroy} from 'svelte';
   import {goto, stores} from '@sapper/app';
+  import Visualizer from './Visualizer.svelte';
 
   const {page} = stores();
   import songs from './_songs';
 
   let aPlayer;
-  import {aPlayer as aPlayerStore} from './_stores';
+  import {aPlayer as aPlayerStore, audioFrequencies} from './_stores';
 
   let currentSongIndex = songs.findIndex(it => $page.path.endsWith(it.slug));
+  let currentAudioTime = 0;
+
+  let enableVisualizer = false;
 
   function initAPlayer() {
     const audioItems = songs.map(song => ({
@@ -45,11 +49,32 @@
       currentSongIndex = e.index;
     });
 
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     aPlayer.on('play', (e) => {
+      https://developers.google.com/web/updates/2017/09/autoplay-policy-changes#webaudio
+        audioCtx.resume();
       if (currentSongIndex === -1) {
         goto('/musik/' + songs[0].slug);
       }
     });
+
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 2048;
+    const source = audioCtx.createMediaElementSource(aPlayer.audio);
+    source.connect(audioCtx.destination);
+    source.connect(analyser);
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    visualizeAudio()
+
+    function visualizeAudio() {
+      requestAnimationFrame(visualizeAudio);
+      if (!aPlayer.paused) {
+        analyser.getByteFrequencyData(dataArray);
+        audioFrequencies.set(dataArray);
+        currentAudioTime = aPlayer.audio.currentTime;
+      }
+    }
   }
 
   page.subscribe(({path}) => {
@@ -68,13 +93,17 @@
 </script>
 
 <style>
+  #aplayer {
+    margin-bottom: 1em;
+  }
+
   @media (min-width: 800px) {
     .columns {
       display: flex;
       flex-direction: row;
     }
 
-    #aplayer {
+    #aPlayerContainer {
       width: 400px;
       margin-right: 50px;
       position: sticky;
@@ -90,7 +119,7 @@
       z-index: 100;
     }
 
-    #aplayer {
+    #aPlayerContainer {
       margin-bottom: 2em;
     }
   }
@@ -104,10 +133,16 @@
 
 <h1>Musik &amp; Texte - Live vom Maxsee</h1>
 
+{#if enableVisualizer}
+  <Visualizer spectrum={$audioFrequencies} currentTime={currentAudioTime}/>
+{/if}
 
 <div class="columns">
   <div class="column player-column">
-    <div id="aplayer"></div>
+    <div id="aPlayerContainer">
+      <div id="aplayer"></div>
+      <input type="checkbox" id="switch" bind:checked={enableVisualizer} /><label for="switch">Psycho-Modus</label>
+    </div>
   </div>
   <div class="column">
     <slot></slot>
