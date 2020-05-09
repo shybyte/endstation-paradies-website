@@ -315,16 +315,15 @@
   <div>
     currentTime: {currentTime.toFixed(2)} = {secondsToLrcTime(currentTime)}<br/><br/>
   </div>
-
-  {#each beatAnalyzer.smoothedValues as freq, i}
-    <div class="freq-bar" style="width: {freq + 'px'}">{i}</div>
-  {/each}
-
-  {#each beatAnalyzer.clampedBeats as freq, i}
-    <div class="freq-bar" style="width: {freq*200 + 'px'}">{i}</div>
-  {/each}
 {/if}
 
+  <!--  {#each beatAnalyzer.smoothedValues as freq, i}-->
+<!--    <div class="freq-bar" style="width: {freq + 'px'}">{i}</div>-->
+<!--  {/each}-->
+
+<!--  {#each beatAnalyzer.clampedBeats as freq, i}-->
+<!--    <div class="freq-bar" style="width: {freq*200 + 'px'}">{i}</div>-->
+<!--  {/each}-->
 
 
 <div class="karaoke-bar">
