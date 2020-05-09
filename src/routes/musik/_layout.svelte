@@ -124,6 +124,11 @@
     }
   }
 
+  /* On top of Visualizer, otherwise you can't click on links. */
+  .text-column {
+    z-index: 1;
+  }
+
 </style>
 
 <svelte:head>
@@ -144,7 +149,7 @@
       <input type="checkbox" id="switch" bind:checked={enableVisualizer} /><label for="switch">Psycho-Modus</label>
     </div>
   </div>
-  <div class="column">
+  <div class="column text-column">
     <slot></slot>
   </div>
 </div>

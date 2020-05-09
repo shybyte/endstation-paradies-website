@@ -33,7 +33,11 @@
   }
 
   const MINUTES_FORMAT = new Intl.NumberFormat('en', {minimumIntegerDigits: 2});
-  const SECONDS_FORMAT = new Intl.NumberFormat('en', {minimumIntegerDigits: 2, minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const SECONDS_FORMAT = new Intl.NumberFormat('en', {
+    minimumIntegerDigits: 2,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 
   function secondsToLrcTime(seconds) {
     const minutes = Math.floor(seconds / 60);
@@ -45,9 +49,11 @@
 
 <script>
   import {stores} from '@sapper/app';
+  import {onMount} from 'svelte';
 
   const {page} = stores();
-  import {aPlayer as aPlayerStore} from './_stores';
+  import {aPlayer as aPlayerStore, audioFrequencies} from './_stores';
+  import {BeatAnalyzer} from './beat-analyzer';
   import {tick} from 'svelte';
 
   export let song;
@@ -55,6 +61,7 @@
   let currentTime = 0;
   let currentLine;
   let spotlightElement;
+  let beatAnalyzer = new BeatAnalyzer(2);
 
   let lines;
   $: lines = song.lrc
@@ -92,7 +99,10 @@
 
     const currentLineEl = document.querySelector('.current-line .line-text');
     if (currentLineEl) {
-      currentLineEl.scrollIntoView({behavior: 'smooth', block: 'center'})
+      // See @media (min-width: 800px)  in _layout.svelte
+      if (window.innerWidth >= 800) {
+        currentLineEl.scrollIntoView({behavior: 'smooth', block: 'center'})
+      }
       if (spotlightElement) {
         const paddingX = 10;
         const paddingY = 3;
@@ -124,6 +134,18 @@
     $aPlayerStore.seek(line.time + 0.001);
     setCurrentLine(line);
   }
+
+  onMount(() => {
+    audioFrequencies.subscribe((frequencies) => {
+      beatAnalyzer.updateWithFrequencies(frequencies);
+      const beats = beatAnalyzer.clampedBeats;
+      if (spotlightElement) {
+        spotlightElement.style.transform = `scale(${1 + beats[0] / 2}, ${1 + beats[1] / 2})`;
+      }
+      beatAnalyzer = beatAnalyzer;
+    });
+  });
+
 
   /********************** Begin editMode **********************/
 
@@ -270,7 +292,13 @@
     box-shadow: 0px 0px 5px #f86;
     border-radius: 10px;
     position: absolute;
-    transition: all 0.2s;
+    transition-duration: 0.2s;
+    transition-property: left, top, width, height, padding;
+  }
+
+  .freq-bar {
+    background: red;
+    height: 10px;
   }
 
 </style>
@@ -287,7 +315,16 @@
   <div>
     currentTime: {currentTime.toFixed(2)} = {secondsToLrcTime(currentTime)}<br/><br/>
   </div>
+
+  {#each beatAnalyzer.smoothedValues as freq, i}
+    <div class="freq-bar" style="width: {freq + 'px'}">{i}</div>
+  {/each}
+
+  {#each beatAnalyzer.clampedBeats as freq, i}
+    <div class="freq-bar" style="width: {freq*200 + 'px'}">{i}</div>
+  {/each}
 {/if}
+
 
 
 <div class="karaoke-bar">

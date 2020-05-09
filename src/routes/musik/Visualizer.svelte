@@ -1,4 +1,10 @@
 <script>
+  /**
+   * Inspired https://noisehack.com/build-music-visualizer-web-audio-api/
+   * which is inspired by https://www.shadertoy.com/view/XsXXDn
+   * (http://www.pouet.net/prod.php?which=57245)
+   */
+
   import {onMount} from 'svelte';
 
   export let spectrum;
@@ -113,7 +119,6 @@ void main(void) {
       gl.uniform1f(fragTime, currentTime)
       copyAudioDataToTexture(gl, spectrum, fragSpectrumArray)
       renderQuad(gl);
-      console.log('log');
     })()
 
     return () => {
