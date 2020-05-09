@@ -45,7 +45,7 @@
 
 <figure>
 	<img alt='Band am Morgen danach' src='band-am-morgen-danach.jpg'>
-	<figcaption>Endstation Paradies am Morgen danach des legendären Konzerts am Maxsee</figcaption>
+	<figcaption>Endstation Paradies am Morgen nach dem legendären Konzerts am Maxsee</figcaption>
 </figure>
 
 <p>Drei verkannte und planlose Genies mittleren Alters, die sich gelegentlich treffen und Töne machen, welche irgendwo zwischen Indierock, Liedermacher und Elektronik liegen, garniert mit deutschen Texten über die postmoderne <em>Conditio humana</em>.</p>
