@@ -1,7 +1,8 @@
 <script>
-  import {onDestroy} from 'svelte';
+  import {onMount, onDestroy} from 'svelte';
   import {goto, stores} from '@sapper/app';
   import Visualizer from './Visualizer.svelte';
+  import {isWebGlAvailable} from './webgl';
 
   const {page} = stores();
   import songs from './_songs';
@@ -12,7 +13,14 @@
   let currentSongIndex = songs.findIndex(it => $page.path.endsWith(it.slug));
   let currentAudioTime = 0;
 
+  let webGlAvailable = true;
   let enableVisualizer = false;
+  let visualizerIsFadingOut = false;
+
+  onMount(() => {
+    webGlAvailable = isWebGlAvailable()
+  });
+
 
   function initAPlayer() {
     const audioItems = songs.map(song => ({
@@ -129,6 +137,21 @@
     z-index: 1;
   }
 
+  .visualizer-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 2s ease;
+    opacity: 0;
+  }
+
+  .visualizer-container.enabled {
+    opacity: 1;
+  }
+
 </style>
 
 <svelte:head>
@@ -138,15 +161,29 @@
 
 <h1>Musik &amp; Texte - Live vom Maxsee</h1>
 
-{#if enableVisualizer}
-  <Visualizer spectrum={$audioFrequencies} currentTime={currentAudioTime}/>
-{/if}
+<div class="visualizer-container" class:enabled={enableVisualizer}
+  on:transitionend={visualizerIsFadingOut = false}
+>
+  {#if enableVisualizer || visualizerIsFadingOut}
+    <Visualizer spectrum={$audioFrequencies} currentTime={currentAudioTime}/>
+  {/if}
+</div>
 
 <div class="columns">
   <div class="column player-column">
     <div id="aPlayerContainer">
       <div id="aplayer"></div>
-      <input type="checkbox" id="switch" bind:checked={enableVisualizer} /><label for="switch">Psycho-Modus</label>
+      {#if webGlAvailable}
+        <input
+          type="checkbox" id="switch"
+          bind:checked={enableVisualizer}
+          on:click={(el) => visualizerIsFadingOut = !el.target.checked}
+        />
+        <label
+          for="switch">Psychedelic-Modus</label>
+      {:else}
+        Installiere einen modernen Browser und ne gute Grafikkarte für den Psychedelic-Modus.
+      {/if}
     </div>
   </div>
   <div class="column text-column">

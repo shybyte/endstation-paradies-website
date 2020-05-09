@@ -1,16 +1,17 @@
 Doing: 
 
 TODO:
-* Write down correct Wahrheit lyrics
-* Complete LRC of Wahrheit
-* Complete LRC of System
-* Write down correct System lyrics
 
 CleanUp:
 * Why is APlayer used from libs folder and via npm?
 * Load song directly instead of fetch from "server"?
 
 Done:
+* Detect WebGL
+* Write down correct Wahrheit lyrics
+* Complete LRC of Wahrheit
+* Complete LRC of System
+* Write down correct System lyrics
 * Scroll to current line
 * Sticky Nav
 * Sticky Player
