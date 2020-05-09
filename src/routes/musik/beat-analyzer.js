@@ -11,6 +11,7 @@ export class BeatAnalyzer {
 
   updateWithFrequencies(frequencies) {
     const bucketLength = Math.floor(frequencies.length / this.bucketsNumber);
+
     this.values.forEach((_, i) => {
       let sum = 0;
       for (let j = 0; j < bucketLength; j++) {
@@ -18,7 +19,6 @@ export class BeatAnalyzer {
       }
       this.values[i] = sum / bucketLength;
     });
-    s
 
     this.values.forEach((value, i) => {
       const mildlySmoothedValue = smooth(this.mildlySmoothedValues[i], value, 4);
