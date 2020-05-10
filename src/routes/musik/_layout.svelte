@@ -133,7 +133,8 @@
   }
 
   /* On top of Visualizer, otherwise you can't click on links. */
-  .text-column {
+  .columns {
+    position: relative;
     z-index: 1;
   }
 
